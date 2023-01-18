@@ -1,59 +1,68 @@
 import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [list, setList] = useState([]);
+  const [pageSetter, setPageSetter] = useState(0);
 
-  
+
+  const handleNextPage = () => {
+    setPageSetter(30);
+  }
+
+  useEffect(() => {
+    fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${pageSetter}&limit=${pageSetter}`)
+    .then(res => {
+      return res.json();
+    })
+    .then(data => {
+      setList(data.results);
+    })
+  }, [pageSetter]);
+
 
   return (
     <div className="App">
-      <Pokemon />
+
+      <button onClick={handleNextPage} >Next Page</button>
+
+      {list.map((item: any) => {
+        const result = <Pokemon key={item.name} obj={item} />;
+        return result;
+      })}
+      
     </div>
   )
 }
 
-const Pokemon = () => {
-  const [info, setInfo] = useState([]);
+const Pokemon = ({ obj }: any) => {
+  obj = obj.name
+
+  const [info, setInfo]: any = useState(null);
+
   const [num, setNum] = useState(1);
-  const [listNum, setListNum] = useState(20);
-
-
-  const handleListNum = () => {
-    setListNum(listNum+10);
-    setNum(num+1);
-  }
-
-
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
-    fetch(`https://pokeapi.co/api/v2/pokemon/${num}`)
+    fetch(`https://pokeapi.co/api/v2/pokemon/${obj}`)
     .then((res) => res.json())
     .then((data) => {
-      console.log(data.name);
-      setInfo(data.name);
-      
-      if (num<listNum) {
-        setNum(num+1);
-      } else {
-        console.log('ok')
-      }
 
-      document.querySelector('.listWrapper')?.insertAdjacentHTML('beforeend', 
-      `<div class='divWrapper'>
-      <span><img class='image' src=${data.sprites.front_default}></img></span>
-      <p class='name'>${data.name}</p>
-      <p>&nbsp;- EXP&nbsp;</p>
-      <p class='experience'>${data.base_experience}</p>
-      </div>
-      `);
+      setInfo(data);
+    })}, []);
 
-    })}, [num])
+  if (info === null) {
+    return <div className='divWrapper'>-</div>
+  };
 
   return (
     <div className='listWrapper'>
-      <button onClick={handleListNum} >Show +10</button>
+      
+      <div className='divWrapper'>
+        <span><img className='image' src={info.sprites.front_default}></img></span>
+        <p className='name'>{info.name}</p>
+        <p className='experience'>&nbsp;{info.base_experience}&nbsp;</p>
+      </div>
       
     </div>
   )
