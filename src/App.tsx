@@ -1,29 +1,63 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 
-function App() {
-  const [list, setList] = useState([]);
-  const [pageSetter, setPageSetter] = useState(0);
 
+function App() {
+  const [list, setList]: any = useState([]);
+  const [lines, setLines]: any = useState('Show 20 lines');
+  const [offset, setOffSet]: any = useState({
+    initial: 0,
+    lines: 10
+  });
+
+  const handlePreviousPage = () => {
+    setOffSet({
+      initial: offset.initial - offset.lines,
+      lines:  offset.lines
+    });
+  }
 
   const handleNextPage = () => {
-    setPageSetter(30);
+    setOffSet({
+      initial: offset.initial + offset.lines,
+      lines:  offset.lines
+    });
+  }
+
+  const handlePageLines = () => {
+    if (offset.lines === 20) {
+      setLines('Show 20 lines');
+      setOffSet({
+        initial: offset.initial,
+        lines:  10
+      });
+    } else {
+      setLines('Show 10 lines');
+      setOffSet({
+        initial: offset.initial,
+        lines:  20
+      });
+    }
   }
 
   useEffect(() => {
-    fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${pageSetter}&limit=${pageSetter}`)
+    fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${offset.initial}&limit=${offset.lines}`)
     .then(res => {
       return res.json();
     })
     .then(data => {
       setList(data.results);
-    })
-  }, [pageSetter]);
+    });
+  }, [offset]);
 
 
   return (
     <div className="App">
 
+      <button onClick={handlePageLines}>{lines}</button>
+
+
+      <button onClick={handlePreviousPage} disabled={offset.initial===0} >Previous Page</button>
       <button onClick={handleNextPage} >Next Page</button>
 
       {list.map((item: any) => {
@@ -61,7 +95,7 @@ const Pokemon = ({ obj }: any) => {
       <div className='divWrapper'>
         <span><img className='image' src={info.sprites.front_default}></img></span>
         <p className='name'>{info.name}</p>
-        <p className='experience'>&nbsp;{info.base_experience}&nbsp;</p>
+        <p className='experience'>&nbsp;EXP&nbsp;{info.base_experience}&nbsp;</p>
       </div>
       
     </div>
