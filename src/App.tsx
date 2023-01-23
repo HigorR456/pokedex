@@ -5,25 +5,54 @@ import './App.css'
 function App() {
   const [list, setList]: any = useState([]);
   const [lines, setLines]: any = useState('Show 20 lines');
+  const [currentPage, setCurrentPage]: any = useState({
+    one: 1,
+    two: 2,
+    three: 3,
+    four: 4,
+    five: 5,
+    six: 6,
+    last: '...'
+  });
   const [offset, setOffSet]: any = useState({
     initial: 0,
     lines: 10
   });
 
+  //previous page function
   const handlePreviousPage = () => {
-    setOffSet({
-      initial: offset.initial - offset.lines,
-      lines:  offset.lines
-    });
+    if (Number.isInteger(offset.initial / offset.lines)) {
+      setOffSet({
+        initial: offset.initial - offset.lines,
+        lines:  offset.lines
+      });
+    } else {
+      setOffSet({
+        initial: Math.ceil(offset.initial),
+        lines:  offset.lines
+      });
+      console.log(offset.initial)
+    }
   }
 
+  //next page function
   const handleNextPage = () => {
-    setOffSet({
-      initial: offset.initial + offset.lines,
-      lines:  offset.lines
-    });
+    
+    if (Number.isInteger(offset.initial / offset.lines)) {
+      setOffSet({
+        initial: (offset.initial) + offset.lines,
+        lines:  offset.lines
+      });
+    } else {
+      setOffSet({
+        initial: offset.initial + offset.lines,
+        lines:  offset.lines
+      });
+      console.log(offset)
+    }
   }
 
+  //toggle exhibition between 10 and 20 lines
   const handlePageLines = () => {
     if (offset.lines === 20) {
       setLines('Show 20 lines');
@@ -40,6 +69,17 @@ function App() {
     }
   }
 
+  //navigation through page number button function
+  const handlePageNumber = (e: any) => {
+    console.log(e.target.innerHTML)
+
+    setOffSet({
+      initial: ((e.target.innerHTML -1) * offset.lines),
+      lines: offset.lines
+    });
+  }
+
+
   useEffect(() => {
     fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${offset.initial}&limit=${offset.lines}`)
     .then(res => {
@@ -47,6 +87,38 @@ function App() {
     })
     .then(data => {
       setList(data.results);
+
+      if (offset.initial/offset.lines > 3 && offset.initial/offset.lines < 125) {
+        setCurrentPage({
+          one: 1,
+          two: (offset.initial/offset.lines)-2,
+          three: (offset.initial/offset.lines)-1,
+          four: (offset.initial/offset.lines),
+          five: (offset.initial/offset.lines)+1,
+          six: (offset.initial/offset.lines)+2,
+          last: (Math.floor(data.count/offset.lines))
+        })
+      } else if ((offset.initial/offset.lines) > 110) {
+        setCurrentPage({
+          one: 1,
+          two: (currentPage.last - 5),
+          three: (currentPage.last - 4),
+          four: (currentPage.last - 3),
+          five: (currentPage.last - 2),
+          six: (currentPage.last - 1),
+          last: (Math.floor(data.count/offset.lines))
+        })
+      } else {
+        setCurrentPage({
+          one: 1,
+          two: 2,
+          three: 3,
+          four: 4,
+          five: 5,
+          six: 6,
+          last: (Math.floor(data.count/offset.lines))
+        })
+      }
     });
   }, [offset]);
 
@@ -57,8 +129,16 @@ function App() {
       <button onClick={handlePageLines}>{lines}</button>
 
 
-      <button onClick={handlePreviousPage} disabled={offset.initial===0} >Previous Page</button>
-      <button onClick={handleNextPage} >Next Page</button>
+      <button onClick={handlePreviousPage} disabled={offset.initial===0} >Previous</button>
+
+      <button onClick={handlePageNumber}>{currentPage.one}</button>
+      <button onClick={handlePageNumber}>{currentPage.two}</button>
+      <button onClick={handlePageNumber}>{currentPage.three}</button>
+      <button onClick={handlePageNumber}>{currentPage.four}</button>
+      <button onClick={handlePageNumber}>{currentPage.five}</button>
+      <button onClick={handlePageNumber}>{currentPage.six}</button>
+      <button onClick={handlePageNumber}>{currentPage.last}</button>
+      <button onClick={handleNextPage} >Next</button>
 
       {list.map((item: any) => {
         const result = <Pokemon key={item.name} obj={item} />;
