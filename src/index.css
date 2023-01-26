@@ -35,3 +35,25 @@
 .divWrapper:hover p {
   font-size: 32px;
 }
+
+.currentBtn {
+  font-weight: bold;
+  font-size: 20px;
+  background-color: rgb(119, 119, 119)
+}
+
+.navigationBtn {
+  font-size: 18px;
+}
+
+.navigationBtn:active {
+  background-color: rgb(119, 119, 119)
+}
+
+.prevNextBtn {
+  font-size: 18px;
+}
+
+.prevNextBtn:active {
+  background-color: rgb(119, 119, 119)
+}

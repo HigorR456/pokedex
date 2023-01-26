@@ -5,7 +5,7 @@ import './App.css'
 function App() {
   const [list, setList]: any = useState([]);
   const [lines, setLines]: any = useState('Show 20 lines');
-  const [currentPage, setCurrentPage]: any = useState({
+  const [navigation, setNavigation]: any = useState({
     one: 1,
     two: 2,
     three: 3,
@@ -14,6 +14,15 @@ function App() {
     six: 6,
     last: '...'
   });
+  const [buttonStyle, setButtotnStyle] = useState({
+    one: 'currentBtn',
+    two: 'navigationBtn',
+    three: 'navigationBtn',
+    four: 'navigationBtn',
+    five: 'navigationBtn',
+    six: 'navigationBtn',
+    last: 'navigationBtn'
+  })
   const [offset, setOffSet]: any = useState({
     initial: 0,
     lines: 10
@@ -71,7 +80,7 @@ function App() {
 
   //navigation through page number button function
   const handlePageNumber = (e: any) => {
-    console.log(e.target.innerHTML)
+    console.log(e)
 
     setOffSet({
       initial: ((e.target.innerHTML -1) * offset.lines),
@@ -88,28 +97,46 @@ function App() {
     .then(data => {
       setList(data.results);
 
-      if (offset.initial/offset.lines > 3 && offset.initial/offset.lines < 125) {
-        setCurrentPage({
+      if (offset.initial/offset.lines > 3 && offset.initial/offset.lines < (Math.floor(data.count/offset.lines)-3)) {
+        setNavigation({
           one: 1,
-          two: (offset.initial/offset.lines)-2,
-          three: (offset.initial/offset.lines)-1,
-          four: (offset.initial/offset.lines),
-          five: (offset.initial/offset.lines)+1,
-          six: (offset.initial/offset.lines)+2,
+          two: (offset.initial/offset.lines)-1,
+          three: (offset.initial/offset.lines),
+          four: (offset.initial/offset.lines)+1,
+          five: (offset.initial/offset.lines)+2,
+          six: (offset.initial/offset.lines)+3,
+          last: (Math.floor(data.count/offset.lines))
+        });
+        setButtotnStyle({
+          one: 'navigationBtn',
+          two: 'navigationBtn',
+          three: 'navigationBtn',
+          four: 'currentBtn',
+          five: 'navigationBtn',
+          six: 'navigationBtn',
+          last: 'navigationBtn'
+        })
+      } else if ((offset.initial/offset.lines) > (Math.floor(data.count/offset.lines)-4)) {
+        setNavigation({
+          one: 1,
+          two: ((Math.floor(data.count/offset.lines)) - 5),
+          three: ((Math.floor(data.count/offset.lines)) - 4),
+          four: ((Math.floor(data.count/offset.lines)) - 3),
+          five: ((Math.floor(data.count/offset.lines)) - 2),
+          six: ((Math.floor(data.count/offset.lines)) - 1),
           last: (Math.floor(data.count/offset.lines))
         })
-      } else if ((offset.initial/offset.lines) > 110) {
-        setCurrentPage({
-          one: 1,
-          two: (currentPage.last - 5),
-          three: (currentPage.last - 4),
-          four: (currentPage.last - 3),
-          five: (currentPage.last - 2),
-          six: (currentPage.last - 1),
-          last: (Math.floor(data.count/offset.lines))
+        setButtotnStyle({
+          one: 'navigationBtn',
+          two: 'navigationBtn',
+          three: 'navigationBtn',
+          four: 'navigationBtn',
+          five: (offset.initial/offset.lines === (Math.floor(data.count/offset.lines) - 3)? 'currentBtn' : 'navigationBtn'),
+          six: (offset.initial/offset.lines === (Math.floor(data.count/offset.lines) - 2)? 'currentBtn' : 'navigationBtn'),
+          last: (offset.initial/offset.lines === (Math.floor(data.count/offset.lines) - 1)? 'currentBtn' : 'navigationBtn')
         })
       } else {
-        setCurrentPage({
+        setNavigation({
           one: 1,
           two: 2,
           three: 3,
@@ -117,6 +144,15 @@ function App() {
           five: 5,
           six: 6,
           last: (Math.floor(data.count/offset.lines))
+        })
+        setButtotnStyle({
+          one: (offset.initial/offset.lines < 1? 'currentBtn' : 'navigationBtn'),
+          two: (offset.initial/offset.lines === 1? 'currentBtn' : 'navigationBtn'),
+          three: (offset.initial/offset.lines === 2? 'currentBtn' : 'navigationBtn'),
+          four: (offset.initial/offset.lines === 3? 'currentBtn' : 'navigationBtn'),
+          five: 'navigationBtn',
+          six: 'navigationBtn',
+          last: (offset.initial/offset.lines === (Math.floor(data.count/offset.lines))? 'currentBtn' : 'navigationBtn')
         })
       }
     });
@@ -128,17 +164,17 @@ function App() {
 
       <button onClick={handlePageLines}>{lines}</button>
 
-
-      <button onClick={handlePreviousPage} disabled={offset.initial===0} >Previous</button>
-
-      <button onClick={handlePageNumber}>{currentPage.one}</button>
-      <button onClick={handlePageNumber}>{currentPage.two}</button>
-      <button onClick={handlePageNumber}>{currentPage.three}</button>
-      <button onClick={handlePageNumber}>{currentPage.four}</button>
-      <button onClick={handlePageNumber}>{currentPage.five}</button>
-      <button onClick={handlePageNumber}>{currentPage.six}</button>
-      <button onClick={handlePageNumber}>{currentPage.last}</button>
-      <button onClick={handleNextPage} >Next</button>
+      <div className='navWrapper'>
+        <button className='prevNextBtn' onClick={handlePreviousPage} disabled={offset.initial===0} >Prev</button>
+        <button className={buttonStyle.one} onClick={handlePageNumber}>{navigation.one}</button>
+        <button className={buttonStyle.two} onClick={handlePageNumber}>{navigation.two}</button>
+        <button className={buttonStyle.three} onClick={handlePageNumber}>{navigation.three}</button>
+        <button className={buttonStyle.four} onClick={handlePageNumber}>{navigation.four}</button>
+        <button className={buttonStyle.five} onClick={handlePageNumber}>{navigation.five}</button>
+        <button className={buttonStyle.six} onClick={handlePageNumber}>{navigation.six}</button>
+        <button className={buttonStyle.last} onClick={handlePageNumber}>{navigation.last}</button>
+        <button className='prevNextBtn' onClick={handleNextPage} >Next</button>
+      </div>
 
       {list.map((item: any) => {
         const result = <Pokemon key={item.name} obj={item} />;
