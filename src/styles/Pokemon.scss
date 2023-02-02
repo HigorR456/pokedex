@@ -1,0 +1,186 @@
+//list of pokemon
+.listWrapper {
+    .divWrapper {
+      display: flex;
+      align-items: center;
+  
+      &:hover {
+        .image {
+          width: 96px;
+        }
+  
+        p {
+          font-size: 32px;
+        }
+      }
+  
+      .image {
+        width: 48px;
+      }
+      
+      .name {
+        font-weight: bold;
+    
+        &:hover {
+          color: rgb(150, 150, 150);
+        }
+      }
+    }
+  }
+
+  
+//details of pokemon
+  .detailsWrapper {
+    position: relative;
+    top: 50%;
+    left: 10%;
+    translate: -10% -0%;
+    text-align: left;
+    height: 300px;
+
+    p {
+      background-color: rgba(0, 0, 0, 0.6);
+      margin: 2px;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      display: inline-block;
+    }
+
+    .artwork {
+      margin-left: 10%;
+      height: 290px;
+    }
+
+    .backToInfoBtn {
+      position: absolute;
+      bottom: 10%;
+      left: 0%;
+      height: 42px;
+    }
+
+    .infoWrapper {
+      text-align: left;
+      position: absolute;
+      top: 10%;
+      left: 0%;
+
+      .returnButton {
+        height: 42px;
+      }
+
+      .typeList {
+        display: flex;
+
+        .types {
+          margin-right: 10px;
+          display: flex;
+        }
+      }
+
+      .sprite {
+        position: fixed;
+        left: 250px;
+        bottom: 60%;
+      }
+
+      .viewBtn {
+        position: absolute;
+        bottom: 42%;
+        left: 200px;
+        width: 94px;
+      }
+      
+      .artBtn {
+        position: absolute;
+        bottom: 30%;
+        left: 200px;
+        width: 94px;
+      }
+      
+      .addToCart {
+        position: absolute;
+        bottom: 30%;
+        left: 300px;
+        height: 49px;
+        width: 90px;
+      }
+    }
+  }
+
+  //details of pokemon
+.detailsWrapper {
+    position: relative;
+    top: 50%;
+    left: 10%;
+    translate: -10% -0%;
+    text-align: left;
+    height: 300px;
+  
+    .detailsWrapper p {
+      background-color: rgba(0, 0, 0, 0.6);
+      margin: 2px;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      display: inline-block;
+    }
+  
+    .artwork {
+      margin-left: 10%;
+      height: 290px;
+    }
+  
+    .backToInfoBtn {
+      position: absolute;
+      bottom: 10%;
+      left: 0%;
+      height: 42px;
+    }
+  
+    .infoWrapper {
+      text-align: left;
+      position: absolute;
+      top: 10%;
+      left: 0%;
+  
+      .returnButton {
+        height: 42px;
+      }
+  
+      .typeList {
+        display: flex;
+  
+        .types {
+          margin-right: 10px;
+          display: flex;
+        }
+      }
+  
+      .sprite {
+        position: fixed;
+        left: 250px;
+        bottom: 60%;
+      }
+  
+      .viewBtn {
+        position: absolute;
+        bottom: 42%;
+        left: 200px;
+        width: 94px;
+      }
+      
+      .artBtn {
+        position: absolute;
+        bottom: 30%;
+        left: 200px;
+        width: 94px;
+      }
+      
+      .addToCart {
+        position: absolute;
+        bottom: 30%;
+        left: 300px;
+        height: 49px;
+        width: 90px;
+      }
+    }
+  }
